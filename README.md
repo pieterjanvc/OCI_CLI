@@ -1,15 +1,14 @@
 ---
-pagetitle: OCI CLI
+output:
+  pdf_document: default
+  html_document: default
 ---
-<p align = "right"><i>Created by PJ Van Camp<br>Date created: 10 November 2020<br>
+<p align = "right"><i>Created by PJ Van Camp <br>Date created: 10 November 2020<br>
 Last update: 11 November 2020</i></p>
 
 <br>
 
-<h1 align = "center">
-Tips on how to use the Oracle Cloud Infrastructure (OCI) Command Line
-Interface (CLI)
-</h1>
+# Tips on how to use the Oracle Cloud Infrastructure (OCI) Command Line Interface (CLI)
 ___
 
 ## Introduction
