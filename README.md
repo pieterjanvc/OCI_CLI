@@ -66,7 +66,7 @@ Once you have the free instance instance running, you can attach a new block vol
 
 If you choose Oracle Linux as your linux distribution, OCFS2 kernels are already pre-installed on your machine. If you use other Linux distributions (e.g. CentOs) you need to install both the kernel and packages to make sure that OCFS can be used
 
-Setting up OCFS 2 on a **non-Oracle-Linux system** (example here CentOs)
+Setting up OCFS2 on a **non-Oracle-Linux system** (example here CentOs)
 ```
 # Add the orcale repositories to your system
 cd /etc/yum.repos.d
@@ -81,7 +81,7 @@ yum install kernel-uek ocfs2
 yum install ocfs2-tools-devel ocfs2-tools -y
 ```
 
-Setting up OCFS 2 on an **Oracle-Linux system**
+Setting up OCFS2 on an **Oracle-Linux system**
 
 ```
 sudo yum install ocfs2-tools-devel ocfs2-tools -y
@@ -269,9 +269,19 @@ oci compute instance terminate \
 ```
 ___
 
-## Putting everything together to fully automate the different steps
+## Putting everything together to fully automate the all steps
 With all of the previous knowledge, we can create a script to launch and terminate an instance in one go saving a lot of time.
 
-\<put scripts here or link to them\>
+### Run cli_launchInstance.sh on the free instance
+This script will launch an instance based on a pre-configured image as created above and attach the specified shared block volume to it. If another instance of this image with connection to the shared volume is already running, the script will demand to shut that one down first before you can proceed. This is a limitation of the current implementation.
+
+*IMPORTANT: Before you run this script for the first time you need to set all parameters in the top of the script in order for it to work*
+
+### Run cli_terminateInstance.sh on the free instance
+This script will terminate the instance launched with the cli_launchInstance.sh script. You get the option to keep or discard the boot volume (not the block volume!). If you set up the instance in the best way, all data it write should go to the shared drive meaning no new data was created on this instance. In that case, you can delete the boot volume when you terminate, saving precious space as the original image is still available and will be used anyway the next time you launch an instance.
+
+If you want to keep changes to the instance, and use it as an image for the next iteration, make an image of it first before you end it and replace the image OCID in the cli_launchInstance.sh script. For now this has to be done manually.
+
+*IMPORTANT: Before you run this script for the first time you need to set all parameters in the top of the script in order for it to work*
 
 ___
