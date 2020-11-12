@@ -1,8 +1,3 @@
----
-output:
-  html_document: default
-  pdf_document: default
----
 <p align = "right"><i>Created by PJ Van Camp <br>Date created: 10 November 2020<br>
 Last update: 12 November 2020</i></p>
 
