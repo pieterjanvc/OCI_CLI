@@ -8,16 +8,27 @@ err_report() {
 }
 trap 'err_report ${LINENO}' ERR
 
+#Check the input args
+while getopts "d" opt; do
+  case $opt in
+	d) dontwait=true
+    ;;
+    \?) echo "Unknown argument provided"
+	    exit
+	;;
+  esac  
+done
+
 ### SET PARAMETERS ###
 #--------------------#
-instanceHostName=<put hostname here>
-cOCID=<put compartment OCID here>
+instanceHostName="myInstance" #Instance name to terminiate
+cOCID="ocid1.compartment.oc1..."
 
 
 ### START SCRIPT ###
 #------------------#
 
-echo -e `date "+%T"`" - Check if there is a pipeline instance running at the moment ..."
+echo -e `date "+%T"`" - Check if there is an instance with name $instanceHostName running at the moment ..."
 #Check if there is no pipeline instance running at the moment
 existing=$(oci compute instance list \
 	--compartment-id $cOCID \
@@ -33,25 +44,34 @@ else
 	
 	while true; do
 		echo -e "\e[91mDo you want to DELETE the current boot volume?\n"\
-		" - All (new) data on the shared block volume will be preserved \n"\
+		" - All (new) data on a shared block volume will be preserved \n"\
 		" - The original instance image will be kept (but no changes to it)\e[0m"
-		read -p "> yes/no/exit: " yn 
+		read -p "> DELETE/no/exit: " yn 
 		case $yn in 
-		[Yy]* ) echo -e `date "+%T"`" - Terminate instance without saving boot volume"
+		DELETE ) echo -e `date "+%T"`" - Terminate instance without saving boot volume"
 				saveBoot=false
 				break;;
-		[Nn]* ) echo -e `date "+%T"`" - Terminate instance and save boot volume"
-				saveBoot=false
+		NO|no|No ) echo -e `date "+%T"`" - Terminate instance and save boot volume"
+				saveBoot=true
 				break;; 
-		[Ee]* ) exit;; 
-		* ) echo "Please answer yes/no/exit. " >&2
+		"exit" ) echo -e `date "+%T"`" - Instance termination exited"
+				exit;; 
+		* ) echo "Please answer DELETE/no/exit. " >&2
 		esac
 	done
 	
-	oci compute instance terminate \
+	#Terminate instanse and wait if -d not set
+	if [ "$dontwait" == "true" ]; then
+		oci compute instance terminate --force \
+		--instance-id $existing \
+		--preserve-boot-volume $saveBoot
+	else
+		oci compute instance terminate --force \
 		--instance-id $existing \
 		--preserve-boot-volume $saveBoot \
 		--wait-for-state TERMINATED
+	fi
+	
 		
 	echo -e "\e[32m\n The instance terminated successfully\e[0m"
 fi 
