@@ -94,8 +94,8 @@ oci compute instance launch \
 instanceId=`cat /srv/instanceLogs/$dateTime\_launchedInstance.json | grep -oP "ocid1.instance.oc1.iad[^\"]+"`
 echo -e `date "+%T"`" - Launching the instance completed\n"
 
-#Attach the meta2amrData block volume
-echo -e `date "+%T"`" - Attach the meta2amrData block volume ..."
+#Attach a custom block volume
+echo -e `date "+%T"`" - Attach the block volume ..."
 oci compute volume-attachment attach \
 	--instance-id $instanceId \
 	--type iscsi \
