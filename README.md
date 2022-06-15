@@ -103,7 +103,7 @@ Choose a fixed internal IP / hostname for the computeInstance
 ### Configure ocfs2 for the first time
 Follow [this guide](https://blogs.oracle.com/cloud-infrastructure/using-the-multi-attach-block-volume-feature-to-create-a-shared-file-system-on-oracle-cloud-infrastructure) on how to configure ocfs2 for the first time on your shared drive with these additional notes:
 
-* The firewall configuration needs to be done in two places. One is on your Linux instance itself (see section in guide on Ports) and the other one on the Oracle web-interface. Networking -> Virtual Cloud Networks -> Subnets -> Security Lists. There, add 2 Ingress Rules for port 3260 and 7777: TCP, SOURCE CIDR 0.0.0.0/0, DESTINATION PORT RANGE 3260 or 7777. Rest stays blank or default
+* The firewall configuration needs to be done in two places. One is on your Linux instance itself (see section in guide on Ports) and the other one on the Oracle Console (web-interface). Networking -> Virtual Cloud Networks -> Subnets -> Security Lists. There, add 2 Ingress Rules for port 3260 and 7777: TCP, SOURCE CIDR 10.0.0.0/16 (or whatever your internal subnet CIDR is), DESTINATION PORT RANGE 3260 or 7777. Rest stays blank or default, see 'Ports' section in the guide for more information)
 * The guide uses "ociocfs2" as the name for the cluster, in this example, we use "myProject". You can use any name you like, but make sure to substitute when needed (e.g. when creating the config file and running `o2cb.init configure`)
 * When creating the cluster.conf file, use the internal IP and hostname of your instances you picked in the previous section
 * When editing the '/etc/fstab' file, use '/dev/oracleoci/oraclevdb' instead of /dev/sdb
